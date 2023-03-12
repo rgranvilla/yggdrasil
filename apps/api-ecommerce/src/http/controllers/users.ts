@@ -1,7 +1,7 @@
-import { FastifyReply, FastifyRequest } from "fastify";
-import { z } from "zod";
+import { FastifyReply, FastifyRequest } from 'fastify';
+import { z } from 'zod';
 
-import { createUserUseCase } from "@/use-cases/account/create-user-use-cases";
+import { createUserUseCase } from '@/use-cases/account/create-user-use-cases';
 
 export async function users(request: FastifyRequest, reply: FastifyReply) {
   const registerBodySchema = z.object({

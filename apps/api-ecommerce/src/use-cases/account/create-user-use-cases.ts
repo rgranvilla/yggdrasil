@@ -1,5 +1,5 @@
-import { prisma } from "@/lib/prisma";
-import { hash } from "bcryptjs";
+import { prisma } from '@/lib/prisma';
+import { hash } from 'bcryptjs';
 
 interface CreateUserUseCaseRequest {
   name: string;
@@ -7,11 +7,7 @@ interface CreateUserUseCaseRequest {
   password: string;
 }
 
-export async function createUserUseCase({
-  name,
-  email,
-  password,
-}: CreateUserUseCaseRequest) {
+export async function createUserUseCase({ name, email, password }: CreateUserUseCaseRequest) {
   const password_hash = await hash(password, 6);
 
   const userWithSameEmail = await prisma.user.findUnique({
@@ -21,7 +17,7 @@ export async function createUserUseCase({
   });
 
   if (userWithSameEmail) {
-    throw new Error("E-mail already exists.");
+    throw new Error('E-mail already exists.');
   }
 
   await prisma.user.create({

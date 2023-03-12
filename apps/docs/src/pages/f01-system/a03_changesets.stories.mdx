@@ -1,0 +1,27 @@
+import { Meta } from "@storybook/addon-docs";
+
+<Meta title="Registro Instalação/Sistema/Instalando o Changesets" />
+
+## Instalando o Changesets
+
+[Changesets](https://github.com/changesets/changesets/blob/main/docs/intro-to-using-changesets.md) - Site official
+
+Para instalar o changesets vamos digitar `yarn add @changesets/cli -DW && yarn changeset init` no terminal e pressionar enter.
+
+Isso irá criar a pasta `.changeset`.
+
+Agora vamos criar nossos scripts do changeset no `package.json`.
+
+```
+{
+  ...
+  "scripts": {
+    ...
+    "changeset": "changeset",
+    "version-packages": "changeset version",
+    "publish-packages": "turbo run build lint test && changeset version && changeset publish"
+  }
+}
+```
+
+Com a instalação concluída vamos fazer o commit, tipo `chore` e descrição `add changeset`.

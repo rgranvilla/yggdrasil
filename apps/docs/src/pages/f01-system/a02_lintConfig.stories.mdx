@@ -1,0 +1,326 @@
+import { Meta } from "@storybook/addon-docs";
+
+<Meta title="Registro Instalação/Sistema/Instalando o Husky, commitlint, commitzen e lint-staged" />
+
+## Instalando o Husky, commitlint, commitzen e lint-staged
+
+Após criar o monorepo, vamos instalar a automatização para nossos commits, para isso vamos utilizar a ferramentas citadas acima.
+
+### Instalando o Husky
+
+[Husky - Git hooks](https://typicode.github.io/husky/#/?id=automatic-recommended) - Site official
+
+No terminal integrado, digite `npx husky-init && yarn`
+
+```bash
+~/yggdrasil❯ npx husky-init && yarn
+husky-init updating package.json
+  setting prepare script to command "husky install"
+husky - Git hooks installed
+husky - created .husky/pre-commit
+
+please review changes in package.json
+yarn install v1.22.19
+[1/5] Validating package.json...
+[2/5] Resolving packages...
+[3/5] Fetching packages...
+[4/5] Linking dependencies...
+[5/5] Building fresh packages...
+success Saved lockfile.
+$ husky install
+husky - Git hooks installed
+Done in 1.73s.
+```
+
+Na pasta criada `.husky`, acesse o arquivo `pre-commit` e modifique o arquivo removendo o `npm test` e colocando `yarn lint`
+
+```bash
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+yarn lint
+```
+
+Em seguida vamos realizar nosso primeiro commit, digite `git add .` e pressione enter, depois digite `git commit -m “chore: add husky”` e pressione enter.
+
+```bash
+~/yggdrasil❯ git add .
+
+~/yggdrasil❯ git commit -m "chore: add husky"
+yarn run v1.22.19
+$ turbo run lint
+• Packages in scope: docs, eslint-config-custom, tsconfig, ui, web
+• Running lint in 5 packages
+• Remote caching disabled
+ui:lint: cache miss, executing 59697f9d9d6081d7
+web:lint: cache miss, executing 298d4a1af42b1f20
+docs:lint: cache miss, executing 8610ff0baf0e28f5
+web:lint: $ next lint
+ui:lint: $ TIMING=1 eslint "**/*.ts*"
+docs:lint: $ next lint
+web:lint: warn  - You have enabled experimental feature (transpilePackages) in next.config.js.
+web:lint: warn  - Experimental features are not covered by semver, and may cause unexpected or broken application behavior. Use at your own risk.
+web:lint:
+docs:lint: warn  - You have enabled experimental feature (transpilePackages) in next.config.js.
+docs:lint: warn  - Experimental features are not covered by semver, and may cause unexpected or broken application behavior. Use at your own risk.
+docs:lint:
+ui:lint: Rule                              | Time (ms) | Relative
+ui:lint: :---------------------------------|----------:|--------:
+ui:lint: react/display-name                |     2.791 |    35.4%
+ui:lint: react/require-render-return       |     0.575 |     7.3%
+ui:lint: react-hooks/rules-of-hooks        |     0.416 |     5.3%
+ui:lint: react/jsx-no-comment-textnodes    |     0.296 |     3.7%
+ui:lint: jsx-a11y/role-supports-aria-props |     0.295 |     3.7%
+ui:lint: react/jsx-uses-react              |     0.272 |     3.4%
+ui:lint: react/no-unescaped-entities       |     0.250 |     3.2%
+ui:lint: react/no-deprecated               |     0.218 |     2.8%
+ui:lint: react/jsx-no-target-blank         |     0.196 |     2.5%
+ui:lint: react/no-danger-with-children     |     0.191 |     2.4%
+web:lint: ✔ No ESLint warnings or errors
+docs:lint: ✔ No ESLint warnings or errors
+
+ Tasks:    3 successful, 3 total
+Cached:    0 cached, 3 total
+  Time:    3.124s
+
+Done in 3.25s.
+[main e6574ee] chore: add husky
+ 3 files changed, 14 insertions(+), 3 deletions(-)
+ create mode 100755 .husky/pre-commit
+```
+
+### Instalação do Commitlint
+
+[Commitlint](https://commitlint.js.org/#/) - Site official
+
+Agora vamos instalar o commitlint, digite `yarn add @commitlint/config-conventional @commitlint/cli -DW` pressione enter, e em seguida digite `echo "module.exports = { extends: ['@commitlint/config-conventional'] };" > commitlint.config.js` para criar o arquivo de configuração do commitlint
+
+```
+~/yggdrasil> yarn add @commitlint/config-conventional @commitlint/cli -D
+yarn add v1.22.19
+[1/5] Validating package.json...
+[2/5] Resolving packages...
+[3/5] Fetching packages...
+[4/5] Linking dependencies...
+[5/5] Building fresh packages...
+success Saved lockfile.
+success Saved 115 new dependencies.
+info Direct dependencies
+├─ @commitlint/cli@17.3.0
+└─ @commitlint/config-conventional@17.3.0
+info All dependencies
+├─ @commitlint/cli@17.3.0
+├─ @commitlint/config-conventional@17.3.0
+...
+├─ yargs@17.6.2
+├─ yn@3.1.1
+└─ yocto-queue@0.1.0
+$ husky install
+husky - Git hooks installed
+Done in 11.81s.
+
+~/yggdrasil> echo "module.exports = { extends: ['@commitlint/config-conventional'] };" > commitlint.config.js
+```
+
+Vamos testar a biblioteca
+
+```bash
+# Para testar a biblioteca
+~/yggdrasil> echo "teste" | yarn commitlint
+
+~/yggdrasil> echo "feat: teste" | yarn commitlint
+```
+
+O primeiro deve retornar o erro, o segundo deve passar sem problemas
+
+Vamos realizar o commit da instalação do commitlint
+
+```bash
+~/yggdrasil> git add . && git commit -m "chore: add commitlint"
+```
+
+### Integrando o Commitlint com o Husky
+
+Para integrar o commitlint com husk digite `yarn husky add .husky/commit-msg 'yarn commitlint --edit $1'` e pressione enter.
+
+```bash
+~/yggdrasil> yarn husky add .husky/commit-msg 'yarn commitlint --edit $1'
+yarn run v1.22.19
+$ /home/ricardo/yggdrasil/node_modules/.bin/husky add .husky/commit-msg 'yarn commitlint --edit $1'
+husky - created .husky/commit-msg
+Done in 0.10s.
+```
+
+Em seguida vamos fazer o commit
+
+```bash
+~/yggdrasil> git add . && git commit -m "chore: integrate commitlint to husky"
+```
+
+### Instalando o Commitzen
+
+[Commitzen](http://commitizen.github.io/cz-cli/) - Site official
+
+Para instalar o commitzen vamos digitar `yarn add commitlint -DW` no terminal e pressionar enter.
+
+```bash
+~/yggdrasil> yarn add commitlint cz-conventional-changelog -DW
+```
+
+Em seguida vamos digitar `yarn commitizen init cz-conventional-changelog -DW` e pressionar enter.
+
+```bash
+~/yggdrasil> yarn commitizen init cz-conventional-changelog -DW
+```
+
+Vamos também modificar o arquivo pre-commit
+
+/
+
+```
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+yarn lint && yarn format
+```
+
+Vamos adicionar um script ao package.json para adicionar todos os arquivos modificados e realizar o commit.
+
+```bash
+{
+  "name": "pigeonfy-system",
+  "version": "0.0.0",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev --parallel",
+    "lint": "turbo run lint",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "prepare": "husky install",
+    "commit": "cz",
+    "co": "git add . && cz"
+  },
+...
+```
+
+Agora vamos realizar o commit desta instalação
+
+```bash
+~/yggdrasil> yarn co
+```
+
+Agora você receberá uma série de perguntas para que possamos realizar o nosso commit, desta forma sempre teremos um commit seguindo um padrão em nossa aplicação.
+
+```bash
+? Select the type of change that you're committing:
+	feat:     A new feature
+  fix:      A bug fix
+  docs:     Documentation only changes
+  style:    Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc)
+  refactor: A code change that neither fixes a bug nor adds a feature
+  perf:     A code change that improves performance
+  test:     Adding missing tests or correcting existing tests
+	build:    Changes that affect the build system or external dependencies (example scopes: gulp, broccoli, npm)
+  ci:       Changes to our CI configuration files and scripts (example scopes: Travis, Circle, BrowserStack, SauceLabs)
+❯ chore:    Other changes that don't modify src or test files
+  revert:   Reverts a previous commit
+```
+
+```bash
+? What is the scope of this change (e.g. component or file name): (press enter to skip):
+
+```
+
+```bash
+? Write a short, imperative tense description of the change (max 85 chars):
+(0) add and config commitizen
+```
+
+```bash
+? Provide a longer description of the change: (press enter to skip)
+```
+
+```bash
+? Are there any breaking changes? (y/N)
+```
+
+```bash
+? Does this change affect any open issues? (y/N)
+```
+
+### Instalando o Lint-staged
+
+[Lint-staged](https://github.com/okonet/lint-staged) - Site official
+
+Para instalar o lint-stage vamos digitar `yarn add lint-staged -DW` no terminal e pressionar enter.
+
+```bash
+~/yggdrasil> yarn add lint-staged -DW
+```
+
+Crie o arquivo `.lintstagedrc` na raiz do projeto e adicione o seguinte conteúdo.
+
+```
+{
+  "*.{js,jsx,ts,tsx}": [
+    "npx eslint --fix",
+    "prettier --write \"**/*.{ts,tsx}\""
+  ],
+  "*.{md,mdx,mjs,yml,yaml,css}": [
+    "prettier --write"
+  ]
+}
+```
+
+Uma vez criado instalado e com o arquivo criado, vamos modificar a forma como realizamos o nosso pre commit.
+Na pasta `.husky` abra o arquivo `pre-commit` e substitua o seu conteúdo por:
+
+```
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+echo '🏗️👷 Styling your project before committing👷‍♂️🏗️'
+echo 'please be patient, this may take a while...'
+
+# Check ESLint Standards
+npx lint-staged ||
+(
+    echo '🔨❌ Yoo, you have a problem in your code. Check linter 🔨❌
+          Run yarn lint, add changes and try commit again.';
+    false;
+)
+
+echo '🎉 No error found: committing this now.... ✨🚀🏄‍♂️🍻'
+
+```
+
+Agora no arquivo `package.json` na raiz do projeto, vamos remover o "lint-staged" e modificar o script de commit.
+
+```
+{
+  ...
+  "scripts": {
+    ...
+    "commit": "lint-staged && cz",
+    "co": "git add . && lint-staged && cz",
+  },
+  ...
+  <-remover todo o conteúdo do lint-staged ->
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "npx eslint --fix",
+      "prettier --write \"**/*.{ts,tsx}\""
+    ],
+    "*.{md,mdx,mjs,yml,yaml,css}": [
+      "prettier --write"
+    ]
+  }
+}
+```
+
+Com o lint-staged instalado e configurado vamos fazer o commit, ele será do tipo chore, e a descrição será "add and config lint-staged".
+Lembre-se para fazer o commit você irá utilizar o comando `yarn co`. Obs.: A partir deste momento já devemos estar familiarizados com o processo de commits, assim não iremos mais descrever ele passo a passo.

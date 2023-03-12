@@ -1,0 +1,109 @@
+import { Meta } from "@storybook/addon-docs";
+
+<Meta title="Registro Instalação/Sistema/Home" />
+
+# Estrutura
+
+A primeira proposta para o sistema Yggdrasil é utilizar um repositório monorepo, baseado no framework Turborepo da Vercel.
+
+Para o frontend a ideia é construir aplicações micro-frontends nextjs com typescript, e com um design-system proprietário, com o tailwindcss para estilização dos componentes.
+
+Teremos quarto workspaces, sendo:
+
+- apps-web que irá contemplar cada uma das micro aplicações de frontend;
+- apps-mobile que irá contemplar cada uma das micro aplicações de frontend mobile;
+- apps-api que conterá o backend;
+- packages que irá contemplar cada uma das configurações distribuídas e o design system;
+
+Para analise da qualidade do código e de possíveis erros, usaremos o Eslint e o formatador de código Prettier. Suas configurações devem ser tratadas dentro do workspace packages, e sempre que necessário aplicá-los será feito o import destas configurações.
+
+Quanto a garantia da formatação dos nossos commits usaremos o commit lint, lint-staged, commitezen e husky.
+
+Lembre-se sempre de realizar commits pequenos, sempre que realizar alguma inclusão ou alteração.
+
+# Etapas do Processo de Configuração
+
+Documentando o processo de configuração do sistema
+
+## Configuração do Ambiente de Desenvolvimento (Ubuntu 22.04)
+
+Preparando o ambiente de desenvolvimento
+
+### Instalando o Node.js
+
+Antes de mais nada, iremos instalar o Node.js. É nele onde vamos rodar o nosso código em ambiente de desenvolvimento.
+
+Você pode seguir o conteúdo do link abaixo para um passo a passo mais detalhado sobre como fazer:
+
+[Instalando o Node.js](https://www.notion.so/Instalando-o-Node-js-d40fdabe8f0a491eb33b85da93d90a2f)
+
+### Instalando o Yarn
+
+Agora que você está com o Node.js instalado na sua máquina, o próximo passo é instalar o gerenciador de pacotes Yarn.
+
+O Yarn é a ferramenta utilizada nas aulas como gerenciador de pacotes padrão mas é um passo opcional, beleza? Se quiser, você pode usar o npm que foi instalado por padrão junto do Node.js no passo anterior.
+
+Assim como para o Node.js, irei deixar aqui mais um mini guia com o passo a passo de como fazer:
+
+[Instalando o Yarn](https://www.notion.so/Instalando-o-Yarn-eca6a13be5b3467d8d2f7be15c60f322)
+
+### Instalando e configurando o Visual Studio Code
+
+Estamos quase finalizando tudo o que é necessário para começar desenvolver nossas aplicações com o React.
+
+Nessa última etapa iremos realizar a instalação do editor de texto e também vou te passar algumas dicas de como melhorar ainda mais a sua experiência de uso nessa ferramenta:
+
+[Instalando e configurando o VSCode](https://www.notion.so/Instalando-e-configurando-o-VSCode-c26cc9f80edf4f3486b9756573038dbb)
+
+## Criação do sistema utilizando o Turborepo da Vercel
+
+Agora que já configuramos nosso ambiente de desenvolvimento vamos ver como nosso sistema foi desenvolvido, você não precisará repetir este processo, ele está aqui para que você possa entender como construímos nosso sistema.
+
+O primeiro passo foi criar um repositório monorepo utilizando para isso o Turborepo da Vercel.
+
+[Turborepo Quickstart - Turborepo](https://turbo.build/repo/docs) - Documentação oficial da Vercel
+
+Crie a pasta pigeonfy-system e entre nela, execute o comando **`npx create-turbo@latest` ,** na primeira pergunta: `Where would you like to create your turborepo?`, coloque o nome do repositório `yggdrasil` e pressione enter, na segunda pergunta selecione `yarn` e pressione enter. Acesse a pasta criada e abra o Visual Studio Code.
+
+```bash
+~/> npx create-turbo@latest
+
+>>> TURBOREPO
+
+>>> Welcome to Turborepo! Let's get you set up with a new codebase.
+
+? Where would you like to create your turborepo? yggdrasil
+? Which package manager do you want to use? yarn
+
+>>> Created a new turborepo with the following:
+
+ - apps/web: Next.js with TypeScript
+ - apps/docs: Next.js with TypeScript
+ - packages/ui: Shared React component library
+ - packages/eslint-config-custom: Shared configuration (ESLint)
+ - packages/tsconfig: Shared TypeScript `tsconfig.json`
+
+>>> Success! Created a new Turborepo at "pigeonfy-system".
+Inside that directory, you can run several commands:
+
+  yarn run build
+     Build all apps and packages
+
+  yarn run dev
+     Develop all apps and packages
+
+Turborepo will cache locally by default. For an additional
+speed boost, enable Remote Caching with Vercel by
+entering the following command:
+
+  npx turbo login
+
+We suggest that you begin by typing:
+
+  cd yggdrasil
+  npx turbo login
+
+~/> cd yggdrasil
+
+~/yggdrasil> code .
+```

@@ -1,0 +1,161 @@
+import { Meta } from "@storybook/addon-docs";
+
+<Meta title="Registro Instalação/Sistema/Configurando o Eslint e Prettier" />
+
+## Configurando o Eslint e Prettier
+
+Renomeie a pasta `packages/eslint-config-custom` para `/packages/eslint-config` e vamos abrir o terminal nesta pasta para instalar as seguintes dependências de devenvolvimento:
+
+- @babel/core
+- @typescript-eslint/eslint-plugin
+- @typescript-eslint/parser
+- babel-plugin-module-resolver
+- eslint
+- eslint-config-universe
+- eslint-import-resolver-babel-module
+- eslint-import-resolver-typescript
+- eslint-plugin-import
+- eslint-plugin-import-helpers
+- eslint-config-next
+
+Após a instalação vamos modificar o arquivo index.js, ele deverá ficar assim:
+
+```
+const jsExtensions = [".js", ".jsx"];
+const tsExtensions = [".ts", ".tsx"];
+const allExtensions = jsExtensions.concat(tsExtensions);
+
+module.exports = {
+  extends: ["universe/web", "universe/native"],
+  settings: {
+    "import/extensions": allExtensions,
+    "import/resolver": {
+      "babel-module": {},
+      node: {
+        extensions: allExtensions,
+      },
+    },
+  },
+  parser: "@typescript-eslint/parser",
+  plugins: ["import", "eslint-plugin-import-helpers"],
+  rules: {
+    "import/namespace": [
+      "error",
+      {
+        allowComputed: true,
+      },
+    ],
+    camelcase: "error",
+    "import/no-unresolved": "error",
+    "import-helpers/order-imports": [
+      "error",
+      {
+        newlinesBetween: "always",
+        groups: ["module", ["/^~/"], ["parent", "sibling", "index"]],
+        alphabetize: {
+          order: "asc",
+          ignoreCase: true,
+        },
+      },
+    ],
+    "no-use-before-define": "off",
+    "no-array-constructor": "off",
+    "@typescript-eslint/no-use-before-define": "off",
+    "@typescript-eslint/no-empty-function": "warn",
+    "@typescript-eslint/ban-ts-comment": "warn",
+    "@typescript-eslint/interface-name-prefix": "off",
+    "@typescript-eslint/explicit-function-return-type": "off",
+    "@typescript-eslint/explicit-module-boundary-types": "off",
+    "@typescript-eslint/no-explicit-any": "off",
+  },
+  ignorePatterns: [
+    "!.*",
+    "node_modules",
+    ".next",
+    ".turbo",
+    "dist",
+    "compiled",
+    "build-next-static",
+    "build-storybook-static",
+    // Files bellow are not git ignored. Eslint fix in the making https://github.com/eslint/eslint/issues/15010
+    "VersionInfo.ts",
+    "next-env.d.ts",
+  ],
+};
+```
+
+Também na pasta `estlint-config` vamos criar um arquivo `.prettierrc.json` com o seguinte conteúdo:
+
+```
+{
+  "tabWidth": 2,
+  "useTabs": false,
+  "printWidth": 100,
+  "singleQuote": false,
+  "trailingComma": "es5",
+  "jsxBracketSameLine": false
+}
+```
+
+Após realizadas as alterações iremos modificar a forma como carregamos o eslint em `apps/web` e na raiz do projeto.
+
+No arquivo `.eslintrc.js` de `apps/web` vamos deixar da seguinte forma:
+
+```
+const presets = require("eslint-config");
+
+module.exports = {
+  ...presets,
+  extends: presets.extends.concat(["next"]),
+  rules: {
+    ...presets.rules,
+    "@next/next/no-html-link-for-pages": "off",
+  },
+};
+```
+
+Em `package.json` também dentro de `apps/web` o arquivo deverá ficar assim:
+
+```
+{
+  "name": "web",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "next": "^13.1.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "ui": "*"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.0.0",
+    "eslint": "*",
+    "eslint-config": "*",
+    "tsconfig": "*",
+    "@types/node": "^17.0.12",
+    "@types/react": "^18.0.22",
+    "@types/react-dom": "^18.0.7",
+    "typescript": "^4.5.3"
+  }
+}
+```
+
+Agora na raiz do projeto yaggdrasil, vamos modificar o arquivo `.eslintrc.js` para:
+
+```
+module.exports = require("eslint-config");
+```
+
+E em `package.json` para trocaremos o import em devDependencies de `"eslint-config-custom": "*"` para `"eslint-config": "*"`.
+
+Por enquanto terminamos as modificações necessárias para utilizar o eslint em nosso sistema. Vamos commitar as alterações, tipo chore, com o seguinte descrição `change eslint config`.
+
+Abra o terminal na raiz do projeto e digite `yarn add --exact prettier -DW`, no arquivo `package.json` em `packages/eslint-config` adicione a dependência de desenvolvimento `"prettier": "*"`.
+
+Apos isso faça o commit, tipo `chore` e descrição `add and config prettier`

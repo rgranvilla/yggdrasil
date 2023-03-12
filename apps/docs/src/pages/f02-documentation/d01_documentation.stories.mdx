@@ -1,0 +1,123 @@
+import { Meta } from "@storybook/addon-docs";
+
+<Meta title="Registro Instalação/Documentação/Home" />
+
+# Documentação
+
+Para nossa documentação iremos utilizar o storybook, antes de mais nada iremos excluir a pasta docs de `apps`, assim poderemos iniciar a configuração do zero.
+
+Faça o commit do tipo `chore` e descrição "remove docs".
+
+Agora vamos dar início a nossa documentação, crie a pasta `apps/docs` abra o terminal na pasta `apps/docs` e inicialize o yarn com o comando `yarn init -y`, em seguida vamos adicionar a biblioteca storybook, use o comando `npx storybook init`, você irá receber uma mensagem informando que o storybook não é feito para ser usado com um projeto vazio, vamos ignorar essa mensagem e selecionar o tipo de projeto react.
+
+Após a instalação execute o comando `yarn storybook` pelo terminal dentro da pasta `apps/docs/` para verificar se tudo esta em ordem. No browser entre em http://localhost:6006 para ver a documentação gerada.
+
+O próximo passo é encerrar o storebook no terminal pois iremos alterar as configurações de storebook.
+
+Vamos instalar a dependência `@storebook/addon-a11y`. Após isso iremos modificar nossos arquivos de configuração na pasta .storebook, começaremos com o `main.js`, que deve ficar assim:
+
+```
+module.exports = {
+  stories: [
+    "../src/pages/**/*.stories.mdx",
+    "../src/stories/**/*.stories.@(js|jsx|ts|tsx)",
+  ],
+  addons: [
+    "@storybook/addon-links",
+    "@storybook/addon-essentials",
+    "@storybook/addon-interactions",
+    "@storybook/addon-a11y",
+  ],
+  framework: "@storybook/react",
+  core: {
+    builder: "@storybook/builder-webpack5",
+  },
+};
+```
+
+Crie o arquivo manager-head.html na pasta com o seguinte conteúdo:
+
+```
+<!-- .storybook/manager-head.html -->
+
+<meta name="robots" content="noindex" />
+```
+
+Crie o arquivo `manager.js` com o seguinte conteúdo:
+
+```
+import { addons } from "@storybook/addons";
+import { themes } from "@storybook/theming";
+
+addons.setConfig({
+  theme: themes.dark,
+});
+```
+
+Crie o arquivo `preview-head.html` com o seguinte conteúdo.
+
+```
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<script>
+  window.global = window;
+</script>
+```
+
+Por último modifique o arquivo `preview.js` para o seguinte conteúdo.
+
+```
+import { themes } from "@storybook/theming";
+
+export const parameters = {
+  actions: { argTypesRegex: "^on[A-Z].*" },
+  controls: {
+    matchers: {
+      color: /(background|color)$/i,
+      date: /Date$/,
+    },
+  },
+  docs: {
+    theme: themes.dark,
+  },
+};
+```
+
+O próximo passo é criar uma pasta `src` dentro de `apps/docs`. Mova a pasta `stories` para ele, e crie uma pasta `pages` em `src`.
+
+Mova o arquivo `Introduction.stories.mdx` de `src/stories` para a pasta `src/pages`.
+
+Execute o storybook novamente para verificar se tudo esta tudo funcionando corretamente.
+
+Vamos adicionar um script em `package.json` na raiz do projeto para executar o storebook a partir da raiz. Adicione `"st": "turbo run storybook"`. Em `turbo.json` modifique para ficar como a seguir:
+
+```
+{
+  "$schema": "https://turbo.build/schema.json",
+  "globalDependencies": ["**/.env.*local"],
+  "pipeline": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": [
+        "dist/**",
+        ".next/**",
+        "storybook-static/**"
+      ]
+    },
+    "lint": {
+      "outputs": []
+    },
+    "dev": {
+      "cache": false
+    },
+    "storybook": {
+      "cache": false
+    }
+  }
+}
+```
+
+Em seguida teste a partir da raiz do projeto se o comando `yarn st` esta funcionando.
+
+Se tudo estiver em ordem realize o commit.

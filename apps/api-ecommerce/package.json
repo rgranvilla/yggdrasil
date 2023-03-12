@@ -9,6 +9,8 @@
     "dev": "tsx watch src/server.ts",
     "start": "node build/server.js",
     "build": "tsup src --out-dir build",
+    "test": "vitest run --dir src/use-cases",
+    "test:watch": "vitest --dir src/use-cases",
     "lint": "npx eslint --ext .tsx,.ts",
     "format": "prettier --write \"src/**/*.ts\""
   },
@@ -24,7 +26,9 @@
     "prisma": "4.11.0",
     "tsup": "6.6.3",
     "tsx": "3.12.4",
-    "typescript": "*"
+    "typescript": "*",
+    "vite-tsconfig-paths": "4.0.5",
+    "vitest": "0.29.2"
   },
   "dependencies": {
     "@prisma/client": "4.11.0",

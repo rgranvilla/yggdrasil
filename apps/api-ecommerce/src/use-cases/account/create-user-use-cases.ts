@@ -7,7 +7,11 @@ interface CreateUserUseCaseRequest {
   password: string;
 }
 
-export async function createUserUseCase({ name, email, password }: CreateUserUseCaseRequest) {
+export async function createUserUseCase({
+  name,
+  email,
+  password,
+}: CreateUserUseCaseRequest) {
   const password_hash = await hash(password, 6);
 
   const userWithSameEmail = await prisma.user.findUnique({

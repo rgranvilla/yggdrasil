@@ -12,6 +12,15 @@
     "dev": {
       "cache": false
     },
+    "test": {
+      "cache": true
+    },
+    "test:watch": {
+      "cache": true
+    },
+    "test:e2e": {
+      "cache": true
+    },
     "storybook": {
       "cache": false
     }

@@ -1,12 +1,12 @@
 import { FastifyInstance } from 'fastify';
-import { authenticate } from '../controllers/accounts/authenticate';
-import { profile } from '../controllers/accounts/profile';
-import { refresh } from '../controllers/accounts/refresh';
-import { users } from '../controllers/accounts/users';
+import { authenticate } from '../controllers/accounts/authenticate/authenticate';
+import { profile } from '../controllers/accounts/profile/profile';
+import { refresh } from '../controllers/accounts/refresh/refresh';
+import { create } from '../controllers/accounts/create/create';
 import { verifyJwt } from '../middlewares/verify-jwt';
 
 export async function accountRoutes(app: FastifyInstance) {
-  app.post('/users', users);
+  app.post('/users', create);
   app.post('/sessions', authenticate);
 
   app.patch('/token/refresh', refresh);

@@ -1,6 +1,6 @@
-import { UserDTO } from '@/core/dtos/userDTO';
+import { UserDTO } from '../../dtos/userDTO';
 import { UserAlreadyExistsError } from '@/core/errors/user-already-exists-error';
-import { UsersRepository } from '@/core/repositories/users-repository';
+import { UsersRepository } from '../../repositories/users-repository';
 
 import { hash } from 'bcryptjs';
 

@@ -1,4 +1,4 @@
-import { UsersRepository } from '@/core/repositories/users-repository';
+import { UsersRepository } from '@/core/modules/account/repositories/users-repository';
 import { Prisma, User } from '@prisma/client';
 
 import { randomUUID } from 'crypto';

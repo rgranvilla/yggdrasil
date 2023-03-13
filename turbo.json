@@ -21,6 +21,9 @@
     "test:e2e": {
       "cache": true
     },
+    "test:cov": {
+      "cache": true
+    },
     "storybook": {
       "cache": false
     }

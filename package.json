@@ -20,7 +20,8 @@
     "storybook": "turbo run storybook",
     "test": "turbo run test",
     "test:watch": "turbo run test:watch",
-    "test:e2e": "turbo run test:e2e"
+    "test:e2e": "turbo run test:e2e",
+    "test:cov": "turbo run test:cov"
   },
   "devDependencies": {
     "@changesets/cli": "2.26.0",

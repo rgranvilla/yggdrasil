@@ -1,7 +1,7 @@
 import { User } from '@/core/modules/account/entities/user';
 
-export class UserMapper {
-  static toDomain(user: User) {
+export class UserViewModel {
+  static toHTTP(user: User) {
     return {
       id: user.id,
       name: user.name,

@@ -1,8 +1,8 @@
-import { UserMapper } from '../../mapper/user-mapper';
 import { GetUserProfileDTO } from '../../dtos/get-user-profile-dto';
 import { UsersRepository } from '../../repositories/users-repository';
 
 import { ResourceNotFoundError } from '@/shared/errors/resource-not-found-error';
+import { UserViewModel } from '../../view-models/user-view-model';
 
 interface GetUserProfileUseCaseRequest {
   userId: string;
@@ -24,7 +24,7 @@ export class GetUserProfileUseCase {
       throw new ResourceNotFoundError();
     }
 
-    const user = UserMapper.toDomain(raw);
+    const user = UserViewModel.toHTTP(raw);
 
     return {
       user,

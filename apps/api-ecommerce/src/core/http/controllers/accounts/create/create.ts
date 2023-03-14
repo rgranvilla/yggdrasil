@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { makeCreateUserUseCase } from '@/core/modules/account/factories/make-create-user-use-case';
 
 import { UserAlreadyExistsError } from '@/shared/errors/user-already-exists-error';
+import { UserViewModel } from '@/core/modules/account/view-models/user-view-model';
 
 export async function create(request: FastifyRequest, reply: FastifyReply) {
   const registerBodySchema = z.object({
@@ -17,10 +18,19 @@ export async function create(request: FastifyRequest, reply: FastifyReply) {
   try {
     const createUserUseCase = makeCreateUserUseCase();
 
-    await createUserUseCase.execute({
+    const { user } = await createUserUseCase.execute({
       name,
       email,
       password,
+    });
+
+    const response = UserViewModel.toHTTP(user);
+
+    return reply.status(201).send({
+      user: {
+        ...response,
+        password: undefined,
+      },
     });
   } catch (err) {
     if (err instanceof UserAlreadyExistsError) {
@@ -29,6 +39,4 @@ export async function create(request: FastifyRequest, reply: FastifyReply) {
 
     throw err;
   }
-
-  return reply.status(201).send();
 }

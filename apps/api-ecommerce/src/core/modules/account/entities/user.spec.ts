@@ -7,6 +7,7 @@ describe('User', () => {
       name: 'John Doe',
       email: 'johndoe@mail.com',
       password: 'Aa123456',
+      type: 'PERSON',
     });
 
     expect(name).toBe('John Doe');

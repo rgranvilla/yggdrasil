@@ -14,6 +14,7 @@ export async function makeNewUser(override: MakeNewUserProps = {}) {
       name: 'John Doe',
       email: 'johndoe@mail.com',
       password: await hash('123456', 6),
+      type: 'PERSON',
       ...override,
     },
     override?.id,

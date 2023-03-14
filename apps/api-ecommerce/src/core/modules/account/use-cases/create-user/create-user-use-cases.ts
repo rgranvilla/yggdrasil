@@ -10,6 +10,7 @@ interface CreateUserUseCaseRequest {
   name: string;
   email: string;
   password: string;
+  type: 'PERSON' | 'ENTITY';
 }
 
 interface CreateUserUseCaseResponse {
@@ -23,6 +24,7 @@ export class CreateUserUseCase {
     name,
     email,
     password,
+    type,
   }: CreateUserUseCaseRequest): Promise<CreateUserUseCaseResponse> {
     const userWithSameEmail = await this.usersRepository.findByEmail(email);
 
@@ -36,6 +38,7 @@ export class CreateUserUseCase {
       name,
       email,
       password: passwordHash,
+      type,
     });
 
     await this.usersRepository.create(user);

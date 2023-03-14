@@ -5,7 +5,9 @@ interface UserProps {
   name: string;
   email: string;
   password: string;
+  phone?: string | null;
   role: 'ADMIN' | 'CUSTOMER';
+  type: 'PERSON' | 'ENTITY';
   createdAt: Date;
 }
 
@@ -18,6 +20,7 @@ export class User {
       UserProps,
       {
         role?: 'ADMIN' | 'CUSTOMER';
+        type?: 'PERSON' | 'ENTITY';
         createdAt?: Date;
       }
     >,
@@ -26,7 +29,9 @@ export class User {
     this._id = id ?? randomUUID();
     this.props = {
       ...props,
+      phone: props.phone ?? null,
       role: props.role ?? 'CUSTOMER',
+      type: props.type ?? 'PERSON',
       createdAt: props.createdAt ?? new Date(),
     };
   }
@@ -59,12 +64,28 @@ export class User {
     return this.props.password;
   }
 
+  public set phone(phone: string | null | undefined) {
+    this.props.phone = phone;
+  }
+
+  public get phone(): string | null | undefined {
+    return this.props.phone;
+  }
+
   public set role(role: 'ADMIN' | 'CUSTOMER') {
     this.props.role = role;
   }
 
   public get role(): 'ADMIN' | 'CUSTOMER' {
     return this.props.role;
+  }
+
+  public set type(type: 'PERSON' | 'ENTITY') {
+    this.props.type = type;
+  }
+
+  public get type(): 'PERSON' | 'ENTITY' {
+    return this.props.type;
   }
 
   public get createdAt(): Date {

@@ -1,8 +1,12 @@
-import { InMemoryUsersRepository } from '@/in-memory/repositories/in-memory-users-repository';
-import { ResourceNotFoundError } from '@/core/errors/resource-not-found-error';
-import { GetUserProfileUseCase } from './get-user-profile';
-import { hash } from 'bcryptjs';
 import { expect, describe, it, beforeEach } from 'vitest';
+import { hash } from 'bcryptjs';
+
+import { User } from '../../entities/user';
+
+import { GetUserProfileUseCase } from './get-user-profile';
+
+import { ResourceNotFoundError } from '@/shared/errors/resource-not-found-error';
+import { InMemoryUsersRepository } from '@/shared/infra/database/in-memory/repositories/account/in-memory-users-repository';
 
 let usersRepository: InMemoryUsersRepository;
 let sut: GetUserProfileUseCase;
@@ -14,11 +18,13 @@ describe('Get User Profile Use Case', () => {
   });
 
   it('should be able to get user profile', async () => {
-    const createdUser = await usersRepository.create({
+    const newUser = new User({
       name: 'John Doe',
       email: 'johndoe@example.com',
-      password_hash: await hash('123456', 6),
+      password: await hash('123456', 6),
     });
+
+    const createdUser = await usersRepository.create(newUser);
 
     const { user } = await sut.execute({
       userId: createdUser.id,

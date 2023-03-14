@@ -1,13 +1,15 @@
-import { ResourceNotFoundError } from '@/core/errors/resource-not-found-error';
+import { UserMapper } from '../../mapper/user-mapper';
+import { GetUserProfileDTO } from '../../dtos/get-user-profile-dto';
 import { UsersRepository } from '../../repositories/users-repository';
-import { UserDTO } from '../../dtos/userDTO';
+
+import { ResourceNotFoundError } from '@/shared/errors/resource-not-found-error';
 
 interface GetUserProfileUseCaseRequest {
   userId: string;
 }
 
 interface GetUserProfileUseCaseResponse {
-  user: UserDTO;
+  user: GetUserProfileDTO;
 }
 
 export class GetUserProfileUseCase {
@@ -16,11 +18,13 @@ export class GetUserProfileUseCase {
   async execute({
     userId,
   }: GetUserProfileUseCaseRequest): Promise<GetUserProfileUseCaseResponse> {
-    const user = await this.usersRepository.findById(userId);
+    const raw = await this.usersRepository.findById(userId);
 
-    if (!user) {
+    if (!raw) {
       throw new ResourceNotFoundError();
     }
+
+    const user = UserMapper.toDomain(raw);
 
     return {
       user,

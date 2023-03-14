@@ -1,8 +1,10 @@
-import { UserDTO } from '../../dtos/userDTO';
-import { UserAlreadyExistsError } from '@/core/errors/user-already-exists-error';
+import { hash } from 'bcryptjs';
+
+import { User } from '../../entities/user';
+
 import { UsersRepository } from '../../repositories/users-repository';
 
-import { hash } from 'bcryptjs';
+import { UserAlreadyExistsError } from '@/shared/errors/user-already-exists-error';
 
 interface CreateUserUseCaseRequest {
   name: string;
@@ -11,7 +13,7 @@ interface CreateUserUseCaseRequest {
 }
 
 interface CreateUserUseCaseResponse {
-  user: UserDTO;
+  user: User;
 }
 
 export class CreateUserUseCase {
@@ -22,19 +24,21 @@ export class CreateUserUseCase {
     email,
     password,
   }: CreateUserUseCaseRequest): Promise<CreateUserUseCaseResponse> {
-    const password_hash = await hash(password, 6);
-
     const userWithSameEmail = await this.usersRepository.findByEmail(email);
 
     if (userWithSameEmail) {
       throw new UserAlreadyExistsError();
     }
 
-    const user = await this.usersRepository.create({
+    const passwordHash = await hash(password, 6);
+
+    const user = new User({
       name,
       email,
-      password_hash,
+      password: passwordHash,
     });
+
+    await this.usersRepository.create(user);
 
     return {
       user,

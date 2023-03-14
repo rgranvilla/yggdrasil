@@ -1,8 +1,9 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { CreateUserUseCase } from './create-user-use-cases';
 import { compare } from 'bcryptjs';
-import { InMemoryUsersRepository } from '@/in-memory/repositories/in-memory-users-repository';
-import { UserAlreadyExistsError } from '@/core/errors/user-already-exists-error';
+
+import { UserAlreadyExistsError } from '@/shared/errors/user-already-exists-error';
+import { InMemoryUsersRepository } from '@/shared/infra/database/in-memory/repositories/account/in-memory-users-repository';
 
 let usersRepository: InMemoryUsersRepository;
 let sut: CreateUserUseCase;
@@ -30,10 +31,7 @@ describe('Create User Use Case', () => {
       password: '123456',
     });
 
-    const isPasswordCorrectlyHashed = await compare(
-      '123456',
-      user.password_hash,
-    );
+    const isPasswordCorrectlyHashed = await compare('123456', user.password);
 
     expect(isPasswordCorrectlyHashed).toBe(true);
   });

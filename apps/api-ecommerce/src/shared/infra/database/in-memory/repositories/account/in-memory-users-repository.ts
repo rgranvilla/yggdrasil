@@ -1,7 +1,5 @@
+import { User } from '@/core/modules/account/entities/user';
 import { UsersRepository } from '@/core/modules/account/repositories/users-repository';
-import { Prisma, User } from '@prisma/client';
-
-import { randomUUID } from 'crypto';
 
 export class InMemoryUsersRepository implements UsersRepository {
   public items: User[] = [];
@@ -14,16 +12,7 @@ export class InMemoryUsersRepository implements UsersRepository {
     return this.items.find((item) => item.email === email) || null;
   }
 
-  async create(data: Prisma.UserCreateInput) {
-    const user: User = {
-      id: randomUUID(),
-      name: data.name,
-      email: data.email,
-      password_hash: data.password_hash,
-      role: data.role || 'CUSTOMER',
-      created_at: new Date(),
-    };
-
+  async create(user: User) {
     this.items.push(user);
 
     return user;

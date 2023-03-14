@@ -1,7 +1,9 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
 import { z } from 'zod';
-import { UserAlreadyExistsError } from '@/core/errors/user-already-exists-error';
+
 import { makeCreateUserUseCase } from '@/core/modules/account/factories/make-create-user-use-case';
+
+import { UserAlreadyExistsError } from '@/shared/errors/user-already-exists-error';
 
 export async function create(request: FastifyRequest, reply: FastifyReply) {
   const registerBodySchema = z.object({

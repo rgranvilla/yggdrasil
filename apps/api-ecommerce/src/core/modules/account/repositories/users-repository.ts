@@ -1,7 +1,7 @@
-import { UserDTO } from '../dtos/userDTO';
+import { User } from '../entities/user';
 
 export abstract class UsersRepository {
-  abstract findById(id: string): Promise<UserDTO | null>;
-  abstract findByEmail(email: string): Promise<UserDTO | null>;
-  abstract create(data: UserDTO): Promise<UserDTO>;
+  abstract findById(id: string): Promise<User | null>;
+  abstract findByEmail(email: string): Promise<User | null>;
+  abstract create(user: User): Promise<User>;
 }

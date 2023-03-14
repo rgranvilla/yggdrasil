@@ -1,7 +1,10 @@
-import { UserDTO } from '../../dtos/userDTO';
-import { InvalidCredentialsError } from '@/core/errors/invalid-credentials-error';
-import { UsersRepository } from '../../repositories/users-repository';
 import { compare } from 'bcryptjs';
+
+import { User } from '../../entities/user';
+
+import { UsersRepository } from '../../repositories/users-repository';
+
+import { InvalidCredentialsError } from '@/shared/errors/invalid-credentials-error';
 
 interface AuthenticateUseCaseRequest {
   email: string;
@@ -9,7 +12,7 @@ interface AuthenticateUseCaseRequest {
 }
 
 interface AuthenticateUseCaseResponse {
-  user: UserDTO;
+  user: User;
 }
 
 export class AuthenticateUseCase {
@@ -25,7 +28,7 @@ export class AuthenticateUseCase {
       throw new InvalidCredentialsError();
     }
 
-    const doestPasswordMatches = await compare(password, user.password_hash);
+    const doestPasswordMatches = await compare(password, user.password);
 
     if (!doestPasswordMatches) {
       throw new InvalidCredentialsError();

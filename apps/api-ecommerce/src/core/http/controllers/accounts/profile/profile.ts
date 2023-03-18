@@ -1,6 +1,6 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
 
-import { makeGetUserProfileUseCase } from '@/core/modules/account/factories/make-get-user-profile-use-case';
+import { makeGetUserProfileUseCase } from '@/core/http/infra/database/prisma/factories/make-get-user-profile-use-case';
 
 export async function profile(request: FastifyRequest, reply: FastifyReply) {
   const getUserProfile = makeGetUserProfileUseCase();

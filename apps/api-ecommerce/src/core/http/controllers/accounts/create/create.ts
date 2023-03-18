@@ -1,19 +1,22 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
 import { z } from 'zod';
 
-import { makeCreateUserUseCase } from '@/core/modules/account/factories/make-create-user-use-case';
+import { makeCreateUserUseCase } from '@/core/http/infra/database/prisma/factories/make-create-user-use-case';
 
 import { UserAlreadyExistsError } from '@/shared/errors/user-already-exists-error';
-import { UserViewModel } from '@/core/modules/account/view-models/user-view-model';
+import { UserViewModel } from '@/core/modules/accounts/view-models/user-view-model';
 
 export async function create(request: FastifyRequest, reply: FastifyReply) {
   const registerBodySchema = z.object({
     name: z.string(),
     email: z.string().email(),
     password: z.string().min(6),
+    type: z.enum(['PERSON', 'ENTITY']),
   });
 
-  const { name, email, password } = registerBodySchema.parse(request.body);
+  const { name, email, password, type } = registerBodySchema.parse(
+    request.body,
+  );
 
   try {
     const createUserUseCase = makeCreateUserUseCase();
@@ -22,6 +25,7 @@ export async function create(request: FastifyRequest, reply: FastifyReply) {
       name,
       email,
       password,
+      type,
     });
 
     const response = UserViewModel.toHTTP(user);

@@ -11,8 +11,8 @@
     "test:create-prisma-environment": "cd prisma/vitest-environment-prisma && yarn link",
     "test:install-prisma-environment": "yarn link vitest-environment-prisma",
     "build": "tsup src --out-dir build",
-    "test": "vitest run --dir src/core/modules/**",
-    "test:watch": "vitest --dir src/core/modules/**",
+    "test": "vitest run src/core/modules/**",
+    "test:watch": "vitest src/core/modules/**",
     "pretest:e2e": "run-s test:create-prisma-environment test:install-prisma-environment",
     "test:e2e": "vitest run --dir src/core/http",
     "test:e2e:watch": "vitest --dir src/core/http",
@@ -23,6 +23,7 @@
   },
   "devDependencies": {
     "@types/bcryptjs": "2.4.2",
+    "@types/jsonwebtoken": "9.0.1",
     "@types/node": "18.15.0",
     "@types/supertest": "2.0.12",
     "@typescript-eslint/eslint-plugin": "5.54.1",
@@ -47,8 +48,10 @@
     "@prisma/client": "4.11.0",
     "@typescript-eslint/parser": "5.54.1",
     "bcryptjs": "2.4.3",
+    "dayjs": "1.11.7",
     "dotenv": "16.0.3",
     "fastify": "4.14.1",
+    "jsonwebtoken": "9.0.0",
     "yarn-run-all": "3.1.1",
     "zod": "3.21.4"
   }

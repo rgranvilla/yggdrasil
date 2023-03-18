@@ -1,7 +1,7 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
 import { z } from 'zod';
 
-import { makeAuthenticateUseCase } from '@/core/modules/account/factories/make-authenticate-use-case';
+import { makeAuthenticateUseCase } from '@/core/http/infra/database/prisma/factories/make-authenticate-use-case';
 
 import { InvalidCredentialsError } from '@/shared/errors/invalid-credentials-error';
 

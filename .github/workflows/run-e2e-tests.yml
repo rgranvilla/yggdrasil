@@ -35,4 +35,5 @@ jobs:
           cmd: test:e2e # will run `yarn test` command
         env:
           JWT_SECRET: testing
+          REFRESH_SECRET: testing
           DATABASE_URL: 'postgresql://docker:docker@localhost:5432/apisolid?schema=public'

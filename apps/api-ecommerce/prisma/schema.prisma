@@ -12,12 +12,19 @@ enum Role {
   CUSTOMER
 }
 
+enum UserType {
+  PERSON
+  ENTITY
+}
+
 model User {
   id            String   @id @default(uuid())
   name          String
   email         String   @unique
   password_hash String
+  phone         String?
   role          Role     @default(CUSTOMER)
+  type          UserType @default(PERSON)
   created_at    DateTime @default(now())
 
   @@map("users")

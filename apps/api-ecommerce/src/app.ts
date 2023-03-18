@@ -4,6 +4,7 @@ import fastifyCookie from '@fastify/cookie';
 import { accountRoutes } from '@/core/http/routes/accounts';
 import { ZodError } from 'zod';
 import { env } from './env';
+import { adminRoutes } from './core/http/routes/admin';
 
 export const app = fastify();
 
@@ -16,11 +17,15 @@ app.register(fastifyJwt, {
   sign: {
     expiresIn: '10m',
   },
+  decode: {
+    complete: true,
+  },
 });
 
 app.register(fastifyCookie);
 
 app.register(accountRoutes);
+app.register(adminRoutes);
 
 app.setErrorHandler((error, _, reply) => {
   if (error instanceof ZodError) {
@@ -34,6 +39,5 @@ app.setErrorHandler((error, _, reply) => {
   } else {
     // TODO: Here we should log to a external tool like DataDog/NewRelic/Sentry
   }
-
   return reply.status(500).send({ message: 'Internal server error.' });
 });
